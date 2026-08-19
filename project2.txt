@@ -1,0 +1,512 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { 
+  Phone, ArrowRight, Menu, X, 
+  MapPin, ShieldCheck, CheckCircle2,
+  Trees, Navigation, Building, ArrowUpRight,
+  Droplets, Zap, Dumbbell, Users, Cctv,
+  Activity, Globe, Heart, Briefcase, Camera
+} from 'lucide-react';
+
+// --- Premium Animation Easing & Variants ---
+const easeOutExpo = [0.16, 1, 0.3, 1];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: easeOutExpo } }
+};
+
+const stagger = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.1 } }
+};
+
+// --- Reusable Premium Components ---
+const FadeIn = ({ children, delay = 0, className = "" }) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true, margin: "-100px" }}
+    variants={{
+      visible: { ...fadeUp.visible, transition: { ...fadeUp.visible.transition, delay } },
+      hidden: fadeUp.hidden
+    }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+);
+
+const ParallaxImage = ({ src, overlay = "bg-[#11123A]/40" }) => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const springScroll = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const y = useTransform(springScroll, [0, 1], ["-20%", "20%"]);
+
+  return (
+    <div ref={ref} className="absolute inset-0 z-0 overflow-hidden bg-[#171717]">
+      <motion.img 
+        style={{ y }} 
+        src={src} 
+        className="absolute w-full h-[140%] -top-[20%] object-cover pointer-events-none opacity-60" 
+        alt="Background" 
+      />
+      <div className={`absolute inset-0 ${overlay} pointer-events-none`} />
+    </div>
+  );
+};
+
+// --- Architectural Navbar ---
+const NavbarComp = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <>
+      <nav className={`fixed top-0 w-full z-[100] transition-all duration-700 border-b ${
+        scrolled ? 'bg-[#fbfbfd]/95 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.05)] py-4 border-[#171717]/5' : 'bg-gradient-to-b from-[#171717]/80 to-transparent border-transparent py-8'
+      }`}>
+        <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <div className={`w-10 h-10 flex items-center justify-center font-black text-sm rounded-xl shadow-lg transition-colors duration-700 ${scrolled ? 'bg-[#11123A] text-[#ffffff]' : 'bg-[#ffffff] text-[#11123A]'}`}>
+              TM
+            </div>
+            <div className="flex flex-col">
+              <span className={`font-black tracking-tight text-lg leading-none transition-colors duration-700 ${scrolled ? 'text-[#171717]' : 'text-[#ffffff]'}`}>
+                THE MEADOWS
+              </span>
+              <span className={`text-[9px] font-bold tracking-[0.2em] uppercase mt-1 transition-colors duration-700 ${scrolled ? 'text-[#808080]' : 'text-[#ffffff]/80'}`}>
+                Taliparamba, Kerala
+              </span>
+            </div>
+          </div>
+          
+          <div className={`hidden lg:flex gap-12 text-[11px] font-bold tracking-[0.2em] uppercase transition-colors duration-700 ${scrolled ? 'text-[#171717]' : 'text-[#ffffff]'}`}>
+            {['Overview', 'Amenities', 'Location', 'Investment', 'Gallery'].map(link => (
+               <a key={link} href={`#${link.toLowerCase()}`} className="hover:text-[#808080] transition-colors">{link}</a>
+            ))}
+          </div>
+
+          <a href="tel:9019800009" className={`hidden lg:flex items-center gap-3 px-8 py-3 text-[11px] font-bold uppercase tracking-widest transition-all duration-500 rounded-full hover:scale-105 shadow-xl ${
+             scrolled 
+               ? 'bg-[#11123A] text-[#ffffff] hover:bg-[#171717]' 
+               : 'bg-[#ffffff] text-[#11123A] hover:bg-[#fbfbfd]'
+          }`}>
+             Book Visit <ArrowUpRight size={14} />
+          </a>
+
+          <button className={`lg:hidden transition-colors duration-500 ${scrolled ? 'text-[#171717]' : 'text-[#ffffff]'}`} onClick={() => setMenuOpen(!menuOpen)}>
+             {menuOpen ? <X size={32} strokeWidth={1.5} /> : <Menu size={32} strokeWidth={1.5} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Fullscreen Mobile Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div initial={{ opacity: 0, y: "-100%" }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: "-100%" }} transition={{ duration: 0.6, ease: easeOutExpo }} className="fixed inset-0 bg-[#fbfbfd] z-[90] flex flex-col px-6 pt-40 pb-12 border-b border-[#171717]/10">
+             <div className="flex flex-col gap-8 text-[#171717]">
+               {['Overview', 'Amenities', 'Location', 'Investment', 'Gallery'].map(link => (
+                 <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="text-4xl font-black tracking-tight border-b border-[#171717]/10 pb-4">{link}</a>
+               ))}
+             </div>
+             <div className="mt-auto">
+                <p className="text-[#808080] text-[10px] uppercase font-bold tracking-widest mb-4">Contact Team</p>
+                <a href="tel:9019800009" className="text-xl text-[#ffffff] font-bold bg-[#11123A] flex items-center gap-4 p-6 rounded-2xl justify-center shadow-2xl">
+                   <Phone size={20} /> +91 90198 00009
+                </a>
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+// --- Main Page Component ---
+export default function TheMeadows() {
+  const { scrollY } = useScroll();
+  const heroTextY = useTransform(scrollY, [0, 1000], [0, -150]);
+
+  return (
+    <div className="bg-[#ffffff] text-[#171717] font-sans antialiased selection:bg-[#11123A] selection:text-[#ffffff] overflow-x-hidden">
+      <NavbarComp />
+
+      {/* --- 1. HERO SECTION (Cinematic Parallax) --- */}
+      <section className="relative min-h-[95vh] flex flex-col justify-end pt-32 lg:pt-40 overflow-hidden bg-[#171717]">
+         <ParallaxImage 
+            src="https://images.unsplash.com/photo-1596423735880-5f2a689b903e?auto=format&fit=crop&q=80&w=2000" 
+            overlay="bg-gradient-to-t from-[#11123A] via-[#11123A]/50 to-[#171717]/40"
+         />
+
+         <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 md:px-12 flex-1 flex flex-col justify-end pb-24 lg:pb-32">
+            <motion.div initial="hidden" animate="visible" variants={stagger} style={{ y: heroTextY }} className="max-w-5xl">
+               <motion.div variants={fadeUp} className="inline-flex items-center gap-3 mb-8 bg-[#ffffff]/10 backdrop-blur-md border border-[#ffffff]/20 px-6 py-2 rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-[#ffffff] animate-pulse" />
+                  <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#ffffff]">Premium Gated Community Plots</span>
+               </motion.div>
+               <motion.h1 variants={fadeUp} className="text-5xl md:text-[80px] lg:text-[110px] font-black tracking-tighter leading-[0.9] text-[#ffffff] mb-8 drop-shadow-2xl">
+                  THE MEADOWS.
+               </motion.h1>
+               <motion.p variants={fadeUp} className="text-xl md:text-3xl text-[#ffffff]/80 font-light max-w-3xl leading-snug mb-12 drop-shadow-md">
+                  Build your dream home in a secure, modern, and well-connected community in Taliparamba, Kerala.
+               </motion.p>
+               
+               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-6">
+                  <a href="tel:9019800009" className="w-full sm:w-auto bg-[#ffffff] text-[#11123A] px-10 py-5 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-[#808080] hover:text-[#ffffff] transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-3 group">
+                     Book Site Visit <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform"/>
+                  </a>
+               </motion.div>
+            </motion.div>
+         </div>
+
+         {/* Elegant Bottom Border indicator */}
+         <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ffffff]/30 to-transparent z-20" />
+      </section>
+
+      {/* --- 2. OVERVIEW & HIGHLIGHTS (Editorial Split) --- */}
+      <section id="overview" className="py-24 md:py-32 px-6 md:px-12 bg-[#fbfbfd]">
+         <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+            
+            <div className="lg:col-span-5 lg:sticky lg:top-40 z-10">
+               <FadeIn>
+                  <span className="text-[#11123A] text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block">Project Overview</span>
+                  <h2 className="text-4xl md:text-5xl lg:text-[64px] font-black tracking-tighter text-[#171717] leading-[1.05] mb-8">
+                     A perfect blend of peace & connectivity.
+                  </h2>
+                  <p className="text-[#808080] text-lg md:text-xl font-medium leading-relaxed mb-10 max-w-lg">
+                     Designed for modern living, the project offers peaceful surroundings while keeping you connected to Taliparamba town. Whether you're looking to build your dream home or make a smart real estate investment, The Meadows provides a secure and future-ready opportunity.
+                  </p>
+                  <div className="flex items-center gap-6">
+                     <div className="flex items-center gap-3">
+                        <MapPin size={24} className="text-[#11123A]" />
+                        <span className="font-bold text-[#171717] text-sm">Near Parpool Bus Stop</span>
+                     </div>
+                  </div>
+               </FadeIn>
+            </div>
+
+            <div className="lg:col-span-7 flex flex-col gap-12">
+               <FadeIn delay={0.2} className="relative h-[400px] md:h-[600px] rounded-[40px] overflow-hidden group shadow-2xl">
+                  <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" alt="Kerala Environment" />
+                  <div className="absolute inset-0 bg-[#11123A]/10 mix-blend-multiply" />
+                  
+                  {/* Floating Location Badge */}
+                  <div className="absolute bottom-8 left-8 bg-[#ffffff]/90 backdrop-blur-md px-6 py-4 rounded-2xl flex items-center gap-4 shadow-xl">
+                     <div className="w-10 h-10 bg-[#11123A] rounded-full flex items-center justify-center text-[#ffffff]"><MapPin size={18}/></div>
+                     <div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#808080]">Location</p>
+                        <p className="font-bold text-[#171717]">Taliparamba Town</p>
+                     </div>
+                  </div>
+               </FadeIn>
+               
+               {/* Asymmetric Highlight Box */}
+               <FadeIn delay={0.3} className="bg-[#11123A] text-[#ffffff] p-10 md:p-16 lg:-ml-24 relative z-20 shadow-[0_20px_40px_rgba(17,18,58,0.2)] rounded-3xl">
+                  <h3 className="text-2xl font-black mb-8 border-b border-[#ffffff]/20 pb-4">Key Highlights</h3>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                     {[
+                        "Fully gated & secured community",
+                        "Prime location near town",
+                        "Ready-to-build residential plots",
+                        "Ideal for families & investment",
+                        "Connectivity to hospitals & schools",
+                        "Peaceful and green surroundings"
+                     ].map((item, i) => (
+                        <li key={i} className="flex items-start gap-3">
+                           <CheckCircle2 size={20} className="text-[#ffffff]/50 shrink-0" />
+                           <span className="text-[#ffffff]/90 font-medium text-sm">{item}</span>
+                        </li>
+                     ))}
+                  </ul>
+               </FadeIn>
+            </div>
+         </div>
+      </section>
+
+      {/* --- 3. AMENITIES (Modern Bento Grid) --- */}
+      <section id="amenities" className="py-24 md:py-32 px-6 md:px-12 bg-[#171717] text-[#ffffff] relative overflow-hidden">
+         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#11123A]/30 rounded-full blur-[120px] pointer-events-none" />
+         
+         <div className="max-w-[1400px] mx-auto relative z-10">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 border-b border-[#ffffff]/10 pb-12">
+               <FadeIn className="max-w-2xl">
+                  <span className="text-[#ffffff]/50 text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block">Premium Features</span>
+                  <h2 className="text-4xl md:text-[64px] font-black tracking-tighter text-[#ffffff] leading-[1.05]">
+                     Designed for a <br/> modern lifestyle.
+                  </h2>
+               </FadeIn>
+               <FadeIn delay={0.2}>
+                  <p className="text-[#ffffff]/60 font-medium text-lg leading-relaxed max-w-md md:text-right">
+                     Every detail is meticulously planned to ensure comfort, safety, and long-term value for your family.
+                  </p>
+               </FadeIn>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+               
+               {/* Community & Lifestyle */}
+               <FadeIn className="bg-[#11123A]/40 backdrop-blur-md border border-[#ffffff]/10 rounded-[40px] p-10 md:p-14 hover:bg-[#11123A]/60 transition-colors duration-500">
+                  <div className="w-16 h-16 bg-[#ffffff] rounded-2xl text-[#11123A] flex items-center justify-center mb-10 shadow-lg">
+                     <Users size={32} />
+                  </div>
+                  <h3 className="text-3xl font-black text-[#ffffff] mb-10 tracking-tight">Community & Lifestyle</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                     {[
+                        { title: "Gated Community", icon: <Building size={20}/> },
+                        { title: "24/7 CCTV Security", icon: <Cctv size={20}/> },
+                        { title: "Clubhouse & Hall", icon: <Award size={20}/> },
+                        { title: "Indoor Gym", icon: <Dumbbell size={20}/> },
+                        { title: "Kids Play Area", icon: <Activity size={20}/> }
+                     ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-4">
+                           <div className="text-[#ffffff]/50">{item.icon}</div>
+                           <span className="text-sm font-bold text-[#ffffff]/90">{item.title}</span>
+                        </div>
+                     ))}
+                  </div>
+               </FadeIn>
+
+               {/* Infrastructure */}
+               <FadeIn delay={0.2} className="bg-[#11123A]/40 backdrop-blur-md border border-[#ffffff]/10 rounded-[40px] p-10 md:p-14 hover:bg-[#11123A]/60 transition-colors duration-500">
+                  <div className="w-16 h-16 bg-[#ffffff] rounded-2xl text-[#11123A] flex items-center justify-center mb-10 shadow-lg">
+                     <Zap size={32} />
+                  </div>
+                  <h3 className="text-3xl font-black text-[#ffffff] mb-10 tracking-tight">Infrastructure</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                     {[
+                        { title: "Tar Roads", icon: <Navigation size={20}/> },
+                        { title: "Street Lights", icon: <Zap size={20}/> },
+                        { title: "Electricity Ready", icon: <Zap size={20}/> },
+                        { title: "Water Connection", icon: <Droplets size={20}/> },
+                        { title: "KWA Provision", icon: <Droplets size={20}/> }
+                     ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-4">
+                           <div className="text-[#ffffff]/50">{item.icon}</div>
+                           <span className="text-sm font-bold text-[#ffffff]/90">{item.title}</span>
+                        </div>
+                     ))}
+                  </div>
+               </FadeIn>
+
+            </div>
+         </div>
+      </section>
+
+      {/* --- 4. WHY CHOOSE & TARGET AUDIENCE (Split Grid) --- */}
+      <section className="py-24 md:py-32 bg-[#ffffff] border-b border-[#171717]/10">
+         <div className="max-w-[1600px] mx-auto px-6 md:px-12">
+            
+            <div className="text-center mb-20">
+               <FadeIn>
+                  <h2 className="text-4xl md:text-[64px] font-black tracking-tighter text-[#171717] leading-[1.05]">
+                     Why Choose The Meadows?
+                  </h2>
+               </FadeIn>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-32">
+               {[
+                  { title: "Peaceful Living", desc: "Enjoy a calm and green environment away from city noise.", bg: "bg-[#11123A]", text: "text-[#ffffff]" },
+                  { title: "Secure Investment", desc: "Gated community with full security ensures safe living.", bg: "bg-[#fbfbfd]", text: "text-[#171717]", border: "border border-[#171717]/10" },
+                  { title: "Strategic Location", desc: "Close to key landmarks and essential services in town.", bg: "bg-[#fbfbfd]", text: "text-[#171717]", border: "border border-[#171717]/10" },
+                  { title: "High Growth", desc: "Taliparamba is an emerging residential hub for appreciation.", bg: "bg-[#171717]", text: "text-[#ffffff]" }
+               ].map((item, i) => (
+                  <FadeIn key={i} delay={i * 0.1} className={`p-10 rounded-[32px] flex flex-col justify-center min-h-[300px] shadow-sm hover:shadow-xl transition-shadow ${item.bg} ${item.text} ${item.border || ''}`}>
+                     <h4 className="text-2xl font-black tracking-tight mb-4">{item.title}</h4>
+                     <p className={`text-sm font-medium ${item.bg === 'bg-[#fbfbfd]' ? 'text-[#808080]' : 'opacity-80'}`}>{item.desc}</p>
+                  </FadeIn>
+               ))}
+            </div>
+
+            {/* Who is this for? (Interactive Hover Cards) */}
+            <div className="border-t border-[#171717]/10 pt-20">
+               <FadeIn className="mb-12">
+                  <span className="text-[#11123A] text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block">Perfect Fit</span>
+                  <h3 className="text-3xl md:text-4xl font-black text-[#171717]">Who is this project for?</h3>
+               </FadeIn>
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {[
+                     { title: "Families", desc: "Looking to build their dream home safely.", icon: <Heart size={32}/> },
+                     { title: "Investors", desc: "Seeking high ROI plots in a growing area.", icon: <Briefcase size={32}/> },
+                     { title: "NRIs", desc: "Looking for premium property in Kerala.", icon: <Globe size={32}/> },
+                     { title: "Peace Seekers", desc: "Buyers who prefer calm yet connected locations.", icon: <Trees size={32}/> }
+                  ].map((card, i) => (
+                     <FadeIn key={i} delay={i * 0.1} className="p-8 border border-[#171717]/10 rounded-3xl hover:bg-[#11123A] group transition-all duration-500 cursor-default bg-[#fbfbfd]">
+                        <div className="text-[#11123A] mb-6 group-hover:scale-110 group-hover:text-[#ffffff] transition-all origin-left">{card.icon}</div>
+                        <h4 className="text-xl font-bold text-[#171717] mb-2 group-hover:text-[#ffffff] transition-colors">{card.title}</h4>
+                        <p className="text-[#808080] text-sm font-medium group-hover:text-[#ffffff]/70 transition-colors">{card.desc}</p>
+                     </FadeIn>
+                  ))}
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* --- 5. LOCATION ADVANTAGE (Cinematic Map & Distances) --- */}
+      <section id="location" className="relative bg-[#171717] text-[#ffffff] overflow-hidden">
+         {/* Embedded Google Map Background */}
+         <div className="absolute inset-0 z-0 opacity-40 mix-blend-luminosity grayscale pointer-events-none">
+            <iframe 
+               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3902.502830873634!2d75.3454722!3d12.0191389!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDAxJzE0LjkiTiA3NcKwMjAnNDMuNyJF!5e0!3m2!1sen!2sin!4v1714000000000!5m2!1sen!2sin" 
+               className="w-full h-[150%] -top-[25%] object-cover filter contrast-125" 
+               style={{ border: 0 }} 
+               allowFullScreen="" 
+               loading="lazy" 
+               referrerPolicy="no-referrer-when-downgrade"
+               title="The Meadows Location Map"
+            ></iframe>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#171717] via-[#171717]/90 to-transparent" />
+         </div>
+
+         <div className="max-w-[1600px] mx-auto px-6 md:px-12 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 py-32">
+            <div>
+               <FadeIn>
+                  <span className="text-[#ffffff]/50 text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block">Strategic Location</span>
+                  <h2 className="text-4xl md:text-[64px] font-black tracking-tighter text-[#ffffff] leading-[1.05] mb-8">
+                     Near Parpool Bus Stop, Taliparamba.
+                  </h2>
+                  <p className="text-[#ffffff]/80 font-medium text-lg leading-relaxed mb-12 max-w-md">
+                     Strategically located to provide quick access to essential destinations, ensuring convenience for daily life while maintaining a calm environment.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8 mb-12 border-t border-[#ffffff]/20 pt-10">
+                     {[
+                        { label: "Lourde Hospital", dist: "3.3 km" },
+                        { label: "Bus Stand", dist: "3.5 km" },
+                        { label: "Rajarajeshwara Temple", dist: "4.0 km" },
+                        { label: "Cooperative Hospital", dist: "5.0 km" },
+                        { label: "Medical College", dist: "13.0 km" }
+                     ].map((loc, i) => (
+                        <div key={i} className="border-b border-[#ffffff]/10 pb-3 flex justify-between items-end group">
+                           <span className="text-[#ffffff]/60 text-xs font-bold uppercase tracking-wide">{loc.label}</span>
+                           <span className="text-[#ffffff] font-black text-xl group-hover:text-[#808080] transition-colors">{loc.dist}</span>
+                        </div>
+                     ))}
+                  </div>
+
+                  <a href="https://maps.app.goo.gl/e8ispiZX9VXftTBR9" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-[#ffffff] text-[#11123A] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-[#808080] hover:text-[#ffffff] transition-colors shadow-2xl">
+                     Open in Google Maps <ArrowUpRight size={16}/>
+                  </a>
+               </FadeIn>
+            </div>
+         </div>
+      </section>
+
+      {/* --- 6. INVESTMENT POTENTIAL (Textural Block) --- */}
+      <section id="investment" className="py-24 md:py-32 bg-[#fbfbfd] border-b border-[#171717]/10">
+         <div className="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
+            <FadeIn>
+               <span className="text-[#11123A] text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block">Market Insights</span>
+               <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-[#171717] leading-[1.1] mb-8 max-w-4xl mx-auto">
+                  Taliparamba is witnessing steady growth in residential demand.
+               </h2>
+            </FadeIn>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
+               {[
+                  { title: "Infrastructure", desc: "Increasing state infrastructure development." },
+                  { title: "Connectivity", desc: "Growing road networks and connectivity." },
+                  { title: "Demand", desc: "Rising demand for structured plotted developments." }
+               ].map((item, i) => (
+                  <FadeIn key={i} delay={i * 0.1} className="bg-[#ffffff] border border-[#171717]/10 p-10 shadow-sm hover:shadow-lg transition-shadow rounded-[24px]">
+                     <div className="w-12 h-12 bg-[#fbfbfd] border border-[#171717]/10 flex items-center justify-center text-[#11123A] rounded-full mx-auto mb-6">
+                        <TrendingUp size={20} />
+                     </div>
+                     <h3 className="text-xl font-bold text-[#171717] mb-3">{item.title}</h3>
+                     <p className="text-[#808080] text-sm font-medium">{item.desc}</p>
+                  </FadeIn>
+               ))}
+            </div>
+            
+            <FadeIn delay={0.4} className="mt-16">
+               <p className="text-[#171717] font-black text-xl italic bg-[#ffffff] border border-[#171717]/10 inline-block px-8 py-6 rounded-[24px] shadow-sm">
+                  “Investing early in The Meadows can offer strong appreciation in the coming years.”
+               </p>
+            </FadeIn>
+         </div>
+      </section>
+
+      {/* --- 7. FINAL CTA (Solid Premium Action) --- */}
+      <section className="py-24 px-6 md:px-12 bg-[#ffffff]">
+         <div className="max-w-[1400px] mx-auto bg-[#11123A] rounded-[48px] p-12 md:p-24 text-center shadow-[0_30px_60px_rgba(17,18,58,0.3)] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#ffffff]/10 rounded-full blur-[80px] pointer-events-none" />
+            <div className="relative z-10 max-w-3xl mx-auto">
+               <h2 className="text-4xl md:text-[64px] font-black tracking-tighter text-[#ffffff] mb-6 leading-[1.05]">
+                  Ready to build <br/>your dream home?
+               </h2>
+               <p className="text-[#ffffff]/70 font-medium text-lg md:text-xl mb-12">
+                  Don't miss the opportunity to invest in Taliparamba's finest premium gated community.
+               </p>
+               
+               <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                  <a href="tel:9019800009" className="bg-[#ffffff] text-[#11123A] px-12 py-5 rounded-full font-bold text-sm tracking-widest uppercase hover:bg-[#808080] hover:text-[#ffffff] transition-all w-full sm:w-auto text-center flex items-center justify-center gap-3 shadow-xl">
+                     <Phone size={18} fill="currentColor" /> Call Now
+                  </a>
+                  <button className="bg-transparent border border-[#ffffff]/30 text-[#ffffff] px-12 py-5 rounded-full font-bold text-sm tracking-widest uppercase flex items-center justify-center gap-3 hover:bg-[#ffffff]/10 transition-all w-full sm:w-auto">
+                     Book Site Visit
+                  </button>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* --- 8. ARCHITECTURAL FOOTER --- */}
+      <footer className="bg-[#171717] pt-24 pb-12 text-[#ffffff]">
+         <div className="max-w-[1600px] mx-auto px-6 md:px-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 border-b border-[#ffffff]/10 pb-16 mb-12">
+               <div className="lg:col-span-2 pr-0 lg:pr-12">
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffffff]/40 mb-8">About The Project</h4>
+                  <div className="flex items-center gap-4">
+                     <div className="w-10 h-10 bg-[#ffffff] text-[#171717] flex items-center justify-center font-black text-xl shadow-md rounded-xl">M</div>
+                     <span className="font-black tracking-tight text-lg">THE MEADOWS</span>
+                  </div>
+                  <p className="text-[#ffffff]/60 text-sm font-medium mt-6 leading-relaxed max-w-md">
+                     Premium Gated Community Plots in Taliparamba, Kerala. A secure, modern, and well-connected community for your dream home or next smart investment.
+                  </p>
+               </div>
+               <div>
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffffff]/40 mb-8">Highlights</h4>
+                  <ul className="space-y-4 text-sm font-bold text-[#ffffff]/80">
+                     <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#ffffff]/40"/> Fully Gated & Secured</li>
+                     <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#ffffff]/40"/> Ready-to-build Plots</li>
+                     <li className="flex items-center gap-3"><CheckCircle2 size={16} className="text-[#ffffff]/40"/> Excellent Connectivity</li>
+                  </ul>
+               </div>
+               <div>
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffffff]/40 mb-8">Contact</h4>
+                  <ul className="space-y-4 text-sm font-bold text-[#ffffff]/80">
+                     <li>+91 90198 00009</li>
+                     <li>Near Parpool Bus Stop, Taliparamba</li>
+                     <li>Kerala, India</li>
+                  </ul>
+               </div>
+            </div>
+            
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffffff]/40">
+               <p>© {new Date().getFullYear()} THE MEADOWS. ALL RIGHTS RESERVED.</p>
+               <div className="flex gap-6">
+                  <a href="#" className="hover:text-[#ffffff] transition-colors">Privacy Policy</a>
+                  <a href="#" className="hover:text-[#ffffff] transition-colors">Terms of Service</a>
+               </div>
+            </div>
+         </div>
+      </footer>
+
+      {/* --- Sticky Mobile Call Button --- */}
+      <div className="fixed bottom-0 left-0 w-full bg-[#ffffff] border-t border-[#171717]/10 p-4 lg:hidden z-50 flex gap-2">
+         <a href="tel:9019800009" className="flex-1 bg-[#11123A] text-[#ffffff] py-4 text-xs font-bold uppercase tracking-widest text-center flex items-center justify-center gap-2 rounded-xl shadow-xl">
+            <Phone size={16} fill="currentColor" /> Call Now
+         </a>
+      </div>
+
+    </div>
+  );
+}
+```eof
