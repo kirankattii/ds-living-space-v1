@@ -24,9 +24,32 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: 'DS Living Spaces',
+  url: 'https://dslivingspaces.com',
+  logo: 'https://dslivingspaces.com/logo.png', // Assuming logo exists
+  description: 'Premium villa plots and gated community plots in Bangalore.',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Bangalore',
+    addressRegion: 'Karnataka',
+    addressCountry: 'IN'
+  },
+  sameAs: [
+    'https://www.facebook.com/dslivingspaces',
+    'https://www.instagram.com/dslivingspaces'
+  ]
+};
+
 export default function Home() {
   return (
     <div className="bg-off-white text-dark font-sans antialiased selection:bg-green-500 selection:text-white overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Hero />
       <Intro />
       <About />

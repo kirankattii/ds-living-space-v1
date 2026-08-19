@@ -32,9 +32,34 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateListing',
+  name: 'ARKA GRAND',
+  description: "Premium Villa Plots in Attibele–Jigala, Bengaluru",
+  url: 'https://dslivingspaces.com/projects/arka-grand',
+  image: 'https://dslivingspaces.com/arka-grand/image-1.jpeg',
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'INR',
+    price: '5499',
+    unitText: 'SQFT'
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Attibele–Jigala',
+    addressRegion: 'Karnataka',
+    addressCountry: 'IN'
+  }
+};
+
 const ProjectPage = () => {
   return (
     <main className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ArkaGrand />
     </main>
   );
