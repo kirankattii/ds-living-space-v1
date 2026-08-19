@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import {
   Phone,
@@ -112,6 +112,17 @@ export default function ArkaGrand() {
   const heroTextY = useTransform(scrollY, [0, 1000], [0, -150]);
   const { openBookVisit } = useModal();
 
+  useEffect(() => {
+    const intervalId = setInterval(
+      () => {
+        openBookVisit();
+      },
+      2 * 60 * 1000,
+    ); // 3 minutes
+
+    return () => clearInterval(intervalId);
+  }, [openBookVisit]);
+
   return (
     <div className="bg-[#ffffff] text-[#171717] font-sans antialiased selection:bg-[#11123A] selection:text-[#ffffff] overflow-x-hidden">
       {/* --- 1. HERO SECTION (Cinematic Parallax) --- */}
@@ -140,13 +151,13 @@ export default function ArkaGrand() {
             </motion.div>
             <motion.h1
               variants={fadeUp}
-              className="text-5xl md:text-[80px] lg:text-[110px] font-black tracking-tighter leading-[0.9] text-[#ffffff] mb-6 drop-shadow-2xl"
+              className="text-5xl md:text-[80px] lg:text-[110px] font-semibold md:font-bold font-black md:tracking-tighter leading-[0.9] text-[#ffffff] mb-6 drop-shadow-2xl"
             >
               ARKA GRAND.
             </motion.h1>
             <motion.p
               variants={fadeUp}
-              className="text-xl md:text-3xl text-[#ffffff]/80 font-light max-w-3xl leading-snug mb-8 drop-shadow-md"
+              className="text-lg md:text-3xl text-[#ffffff]/80 font-light max-w-3xl leading-snug mb-8 drop-shadow-md"
             >
               Premium Villa Plots for a Grand Life in Attibele–Jigala. Prime
               Location. Faster Growth. Higher Returns.
@@ -154,11 +165,11 @@ export default function ArkaGrand() {
 
             <motion.div
               variants={fadeUp}
-              className="flex flex-col sm:flex-row items-center gap-6"
+              className="flex flex-col sm:flex-row sm:items-center gap-6"
             >
               <button
                 onClick={openBookVisit}
-                className="w-full sm:w-auto bg-[#ffffff] text-[#11123A] px-10 py-5 rounded-2xl font-bold text-sm tracking-widest uppercase hover:bg-[#808080] hover:text-[#ffffff] transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-3 group"
+                className="w-full sm:w-auto bg-[#ffffff] text-[#11123A] px-6 sm:px-10 py-3 sm:py-5 rounded-2xl font-bold text-sm tracking-widest uppercase hover:bg-[#808080] hover:text-[#ffffff] transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-3 group"
               >
                 Book Site Visit{" "}
                 <ArrowRight
@@ -166,8 +177,8 @@ export default function ArkaGrand() {
                   className="group-hover:translate-x-1 transition-transform"
                 />
               </button>
-              <div className="flex flex-col">
-                <span className="text-[#ffffff] font-bold tracking-wider text-sm uppercase">
+              <div className="flex flex-col jusfity-start">
+                <span className="text-[#ffffff] font-semibold md:font-bold tracking-wider text-sm uppercase">
                   Starting From
                 </span>
                 <span className="text-[#ffffff] font-black text-2xl">
@@ -193,10 +204,10 @@ export default function ArkaGrand() {
               <span className="text-[#11123A] text-[10px] font-bold tracking-[0.3em] uppercase mb-2 block">
                 Project Overview
               </span>
-              <h2 className="text-4xl md:text-5xl lg:text-[64px] font-black tracking-tighter text-[#171717] leading-[1.05] mb-6">
+              <h2 className="text-4xl md:text-5xl font-medium sm:font-semibold lg:text-[64px] font-black tracking-tighter text-[#171717] leading-[1.05] mb-6">
                 A Location Designed for Tomorrow.
               </h2>
-              <p className="text-[#808080] text-lg md:text-xl font-medium leading-relaxed mb-6 max-w-lg">
+              <p className="text-[#808080] text-md md:text-xl font-medium leading-relaxed mb-6 max-w-lg">
                 ARKA GRAND brings together strategic location, strong
                 connectivity, modern infrastructure and lifestyle amenities in
                 one thoughtfully planned gated community. Positioned close to
@@ -218,29 +229,14 @@ export default function ArkaGrand() {
           <div className="lg:col-span-7 flex flex-col gap-12">
             <FadeIn
               delay={0.2}
-              className="relative h-[400px] md:h-[600px] rounded-2xl overflow-hidden group shadow-2xl"
+              className="relative h-[300px] md:h-[450px] rounded-2xl overflow-hidden group shadow-2xl bg-[#f4f4f5]"
             >
               <img
                 src="/arka-grand/image-2.jpeg"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
+                className="absolute inset-0 w-full h-full object-contain "
                 alt="Project Environment"
               />
               <div className="absolute inset-0 bg-[#11123A]/10 mix-blend-multiply" />
-
-              {/* Floating Location Badge */}
-              <div className="absolute bottom-8 left-8 bg-[#ffffff]/90 backdrop-blur-md px-6 py-4 rounded-2xl flex items-center gap-4 shadow-xl">
-                <div className="w-10 h-10 bg-[#11123A] rounded-2xl flex items-center justify-center text-[#ffffff]">
-                  <MapPin size={18} />
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#808080]">
-                    Location
-                  </p>
-                  <p className="font-bold text-[#171717]">
-                    Attibele–Jigala, Anekal
-                  </p>
-                </div>
-              </div>
             </FadeIn>
 
             {/* Asymmetric Highlight Box */}
@@ -286,17 +282,17 @@ export default function ArkaGrand() {
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#11123A]/30 rounded-2xl blur-[120px] pointer-events-none" />
 
         <div className="max-w-[1400px] mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8 border-b border-[#ffffff]/10 pb-8">
+          <div className="flex flex-col md:flex-row justify-between sm:items-end mb-12 gap-8 border-b border-[#ffffff]/10 pb-8">
             <FadeIn className="max-w-2xl">
               <span className="text-[#ffffff]/50 text-[10px] font-bold tracking-[0.3em] uppercase mb-2 block">
                 Premium Features
               </span>
-              <h2 className="text-4xl md:text-[64px] font-black tracking-tighter text-[#ffffff] leading-[1.05]">
+              <h2 className="text-4xl md:text-[64px] font-medium sm:font-semibold font-black tracking-tighter text-[#ffffff] leading-[1.05]">
                 Designed for a <br /> modern lifestyle.
               </h2>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <p className="text-[#ffffff]/60 font-medium text-lg leading-relaxed max-w-md md:text-right">
+              <p className="text-[#ffffff]/60 font-medium text-md sm:text-lg leading-relaxed max-w-md md:text-right">
                 With 4,000+ plants and trees, luxury amenities, and top-tier
                 security, ARKA GRAND is designed to be your serene sanctuary.
               </p>
@@ -306,12 +302,14 @@ export default function ArkaGrand() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Community & Lifestyle */}
             <FadeIn className="bg-[#11123A]/40 backdrop-blur-md border border-[#ffffff]/10 rounded-2xl p-10 md:p-14 hover:bg-[#11123A]/60 transition-colors duration-500">
-              <div className="w-16 h-16 bg-[#ffffff] rounded-2xl text-[#11123A] flex items-center justify-center mb-6 shadow-lg">
-                <Users size={32} />
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-[#ffffff] rounded-2xl text-[#11123A] flex items-center justify-center shadow-lg shrink-0">
+                  <Users size={32} />
+                </div>
+                <h3 className="text-2xl md:text-2xl lg:text-3xl font-black text-[#ffffff] tracking-tight">
+                  Community & Leisure
+                </h3>
               </div>
-              <h3 className="text-3xl font-black text-[#ffffff] mb-6 tracking-tight">
-                Community & Leisure
-              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {[
                   { title: "Luxury Clubhouse", icon: <Award size={20} /> },
@@ -342,12 +340,14 @@ export default function ArkaGrand() {
               delay={0.2}
               className="bg-[#11123A]/40 backdrop-blur-md border border-[#ffffff]/10 rounded-2xl p-10 md:p-14 hover:bg-[#11123A]/60 transition-colors duration-500"
             >
-              <div className="w-16 h-16 bg-[#ffffff] rounded-2xl text-[#11123A] flex items-center justify-center mb-6 shadow-lg">
-                <Zap size={32} />
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-[#ffffff] rounded-2xl text-[#11123A] flex items-center justify-center shadow-lg shrink-0">
+                  <Zap size={32} />
+                </div>
+                <h3 className="text-2xl md:text-2xl lg:text-3xl font-black text-[#ffffff] tracking-tight">
+                  Infrastructure & Security
+                </h3>
               </div>
-              <h3 className="text-3xl font-black text-[#ffffff] mb-6 tracking-tight">
-                Infrastructure & Security
-              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {[
                   { title: "24-Hour Security", icon: <Cctv size={20} /> },
@@ -377,7 +377,7 @@ export default function ArkaGrand() {
       </section>
 
       {/* --- 4. WHY CHOOSE & TARGET AUDIENCE (Split Grid) --- */}
-      <section className="py-16 md:py-20 bg-[#ffffff] border-b border-[#171717]/10">
+      <section className="py-16  md:py-20 bg-[#ffffff] border-b border-[#171717]/10">
         <div className="max-w-[1600px] mx-auto px-6 md:px-12">
           <div className="text-center mb-12">
             <FadeIn>
@@ -434,7 +434,7 @@ export default function ArkaGrand() {
           </div>
 
           {/* Who is this for? (Interactive Hover Cards) */}
-          <div className="border-t border-[#171717]/10 pt-16">
+          <div className="border-t border-[#171717]/10 py-10 md:pt-16">
             <FadeIn className="mb-8">
               <span className="text-[#11123A] text-[10px] font-bold tracking-[0.3em] uppercase mb-2 block">
                 Perfect Fit
