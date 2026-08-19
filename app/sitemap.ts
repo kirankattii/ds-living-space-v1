@@ -43,6 +43,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: 'https://dslivingspaces.com/projects/arka-grand',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
+    {
       url: 'https://dslivingspaces.com/amenities-gallery',
       lastModified: new Date('2026-05-01'),
       changeFrequency: 'monthly',

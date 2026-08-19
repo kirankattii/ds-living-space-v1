@@ -27,7 +27,7 @@ const Hero = () => {
   return (
     <section className="relative min-h-[85vh] flex flex-col justify-end pt-24 lg:pt-28 overflow-hidden bg-dark">
       <ParallaxBackground
-        src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000"
+        src="/arka-grand/image-5.jpeg"
         overlay="bg-gradient-to-b from-primary/80 via-dark/40 to-dark/90"
       />
 
@@ -41,7 +41,7 @@ const Hero = () => {
             OWN PREMIUM <br /> VILLA PLOTS.
           </motion.h1>
           <motion.p variants={fadeUp} className="text-xl md:text-2xl text-white/80 font-medium max-w-3xl leading-snug mb-8 drop-shadow-md">
-            Experience a perfect blend of nature, luxury, and investment potential with Bird Song by Yash Value Spaces, exclusively marketed by DS Living Spaces.
+            Experience a perfect blend of nature, luxury, and investment potential with ARKA GRAND, strategically located next to the proposed Swift City IT Hub in Attibele–Jigala.
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
