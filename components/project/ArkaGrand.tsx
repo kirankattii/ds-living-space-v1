@@ -551,7 +551,7 @@ export default function ArkaGrand() {
             className="relative h-[400px] lg:h-[600px] rounded-2xl overflow-hidden group shadow-2xl border border-white/10"
           >
             <img
-              src="/arka-grand/image-3.jpeg"
+              src="/arka-grand/image-9.jpeg"
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]"
               alt="Project Layout Map"
             />

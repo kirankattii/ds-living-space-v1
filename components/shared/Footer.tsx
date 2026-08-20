@@ -34,6 +34,7 @@ const Footer = () => {
               <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
               <li><Link href="/projects/bird-song-yash-value-spaces" className="hover:text-primary transition-colors">Bird Song</Link></li>
               <li><Link href="/projects/the-meadows" className="hover:text-primary transition-colors">The Meadows</Link></li>
+              <li><Link href="/projects/arka-grand" className="hover:text-primary transition-colors">Arka Grand</Link></li>
               <li><Link href="/amenities-gallery" className="hover:text-primary transition-colors">Gallery & Amenities</Link></li>
               <li><Link href="/blog" className="hover:text-primary transition-colors">Journal</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
