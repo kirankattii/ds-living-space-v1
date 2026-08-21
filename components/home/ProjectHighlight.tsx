@@ -32,7 +32,7 @@ const projects = [
         value: "Ready to Register",
         statusColor: "text-green-400",
       },
-      { label: "Pricing", value: "₹5,499/sq.ft" },
+      { label: "Pricing", value: "₹6,200/sq.ft" },
     ],
     link: "/projects/arka-grand",
     brochure: null,

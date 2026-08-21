@@ -182,7 +182,7 @@ export default function ArkaGrand() {
                   Starting From
                 </span>
                 <span className="text-[#ffffff] font-black text-2xl">
-                  ₹5,499/- per Sq. Ft.
+                  ₹6,200/- per Sq. Ft.
                 </span>
               </div>
             </motion.div>
